@@ -1,0 +1,30 @@
+
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package cajero;
+import UpperEssential.UpperEssentialLookAndFeel;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+/**
+ *
+
+ */
+public class Cajero {
+
+    /**
+     * @param args the command line arguments
+     */
+   public static void main(String[] args) throws UnsupportedLookAndFeelException {
+ //  public static void main(String[] args) {
+        Inicio vInicio = new Inicio();
+        vInicio.show();
+         // https://www.youtube.com/watch?v=mogoHovro3E  
+     UIManager.setLookAndFeel(new UpperEssentialLookAndFeel());
+        
+    }
+    
+}

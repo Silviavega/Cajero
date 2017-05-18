@@ -1,0 +1,61 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package validar;
+
+import java.awt.Color;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+
+/**
+ *
+ * @author hp1
+ */
+public class Validar {
+static int n=0;
+    public static void soloNumeros(JTextField txtValor )
+    {
+     txtValor.addKeyListener(new KeyAdapter() {
+    public void keyTyped(KeyEvent e)
+    {
+        char c=e.getKeyChar();
+        if(!Character.isDigit(c))
+            {
+        e.consume();
+            }
+    }
+});   
+ }
+    public static void soloLetras(JTextField txtValor)
+    {
+   txtValor.addKeyListener(new KeyAdapter() {
+    public void keyTyped(KeyEvent e)
+    {        char c=e.getKeyChar();
+        if(Character.isDigit(c))
+      {
+            e.consume();       
+     }
+    }
+});
+    }
+        
+    public static void decimalOEntero(JTextField txtValor)
+    {
+    String var = txtValor.getText().toString(); 
+try{ 
+double num = Double.parseDouble(var);
+//txtValor.setBackground(Color.WHITE);
+} catch(Exception fe) { 
+JOptionPane.showMessageDialog(null, "Ingrese en el campo saldo numeros enteros o decimales :");
+    txtValor.setBackground(Color.red);
+txtValor.setText("");
+} 
+}
+        
+    }
+            
+  

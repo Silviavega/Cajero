@@ -1,0 +1,106 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package Modelo;
+
+import Conexion.Conectar;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import javax.swing.JOptionPane;
+
+/**
+ *
+ */
+public class Usuario {   
+    Conectar cc= new Conectar();
+    ResultSet rsul;
+    String cedula;
+    String nombre;
+    String apellido;
+    String direccion;
+    String celular;
+    int tipoCuenta;
+    String numCuenta;
+    String clave;
+    String saldo;
+ Statement st;
+    public Usuario(String cedula, String nombre, String apellido, String direccion, String celular, int tipoCuenta, String numCuenta, String clave, String saldo) {
+        this.cedula = cedula;
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.direccion = direccion;
+        this.celular = celular;
+        this.tipoCuenta = tipoCuenta;
+        this.numCuenta = numCuenta;
+        this.clave = clave;
+        this.saldo = saldo;
+    }
+    
+   
+
+    
+   
+    public Usuario() {
+    }
+    public  int insertarUsu(){
+    
+        
+        String  sql3="Select * from cuenta where numCuenta = '"+numCuenta+"'";
+        if(cc.verificar(sql3)>0){
+            JOptionPane.showMessageDialog(null, "Numero de cuenta ya se encuentra registrado");
+        return  0;
+  
+        }else{
+         String sql="Select * from usuario where cedula='"+ cedula+"'";
+        if (cc.verificar(sql)>0){
+            JOptionPane.showMessageDialog(null, "Cédula ya se encuentra registrada");
+        return 0;
+        }else
+        {
+        String sql2="insert into usuario values(null,'"+cedula+"','"+nombre+"','"+apellido+"','"+direccion+"','"+celular+"')";
+        cc.sinRetorno(sql2);
+       String sql4="SELECT max(id) as maximo from usuario";
+         int idMaxUsu=cc.codMax(sql4);    
+        String sql6="insert into cuenta values(null,"+idMaxUsu+","+tipoCuenta+",'"+numCuenta+"','"+clave+"','"+saldo+"')";
+        
+        return cc.sinRetorno(sql6);
+        
+        }
+       
+        }
+     
+        }
+    
+    
+
+  public int actualizar(){
+    String sql="update usuario set nombre='"+nombre+"', apellido='"+apellido+"', direccion='"+direccion+"', celular='"+celular+"' where cedula="+cedula+"";
+  cc.sinRetorno(sql);
+    
+    String sql2="update cuenta set idTipCue='"+tipoCuenta+"', clave='"+clave+"', saldo='"+saldo+"' where numCuenta='"+numCuenta+"'";
+    
+    return cc.sinRetorno(sql2);
+    
+    }
+    
+    
+    
+    
+    public ResultSet consultarUsuario(String valor){
+         String sql="Select Usu.*,  Cu.numCuenta,Cu.clave, Cu.saldo,TC.nombre as tipoCuenta from usuario Usu Inner join cuenta Cu on Usu.id=Cu.idUsu inner join tipo_cuenta TC on TC.id=Cu.idTipCue and CONCAT(Usu.nombre,'',Usu.apellido) like '%"+valor+"%' or Usu.cedula='"+valor+"' group by Usu.cedula";
+        return cc.retorno(sql);
+    }
+   
+
+    public int accederSistema(String cuenta, String clave){
+    
+    String sql="Select Cu.*, Usu.nombre, Usu.apellido  from usuario Usu inner join cuenta Cu on Usu.id=Cu.idUsu where numCuenta='"+cuenta+"' and clave='"+clave+"'";    
+    return cc.accederCajero(sql);    
+
+    }
+    
+  
+}
