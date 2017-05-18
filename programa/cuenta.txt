@@ -1,0 +1,74 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package Modelo;
+
+import Conexion.Conectar;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**
+ *
+ */
+public class Cuenta {
+   public  static int  tipoCuenta=0;
+    public static double saldo=0.0;
+    Conectar cc= new Conectar();
+          Statement st;
+          ResultSet rsul;
+    //Actualmete su saldo no es insuficiente para realizar la transferencia
+   //
+          
+    public Cuenta(){
+    
+    }
+
+    
+    
+    
+  public int verificarSaldo(String cuenta){
+   
+  String sql="Select cuenta.idTipCue as tipoCuenta , cuenta.saldo as saldo from cuenta where numCuenta='"+cuenta+"'";
+               try {
+           st=cc.abrir().createStatement();
+  
+           rsul=st.executeQuery(sql);
+         if(rsul.next())
+         {
+         tipoCuenta=rsul.getInt("tipoCuenta");
+         saldo=rsul.getDouble("saldo");
+         }
+               } catch (SQLException ex) {
+           Logger.getLogger(Cuenta.class.getName()).log(Level.SEVERE, null, ex);
+       }
+        
+    return 0;
+    }
+    
+  
+  
+  
+  public int actualizarSaldo(String cuenta , double  saldoActual){
+      String sql="update cuenta set saldo="+saldoActual+" where numCuenta='"+cuenta+"'";
+         return cc.sinRetorno(sql);
+  }
+  
+   public int actualizarClave(String cuenta , String clave){
+      String sql="update cuenta set clave='"+clave+"' where numCuenta='"+cuenta+"'";
+         return cc.sinRetorno(sql);
+  }
+  
+   
+   
+   public ResultSet consultarSaldo( String cuenta){
+   String sql="select Usu.* , Cu.* , TC.* from usuario Usu inner join cuenta Cu on Usu.id=Cu.idUsu inner join tipo_cuenta TC on TC.id=Cu.idTipCue  where numCuenta='"+cuenta+"'  ";
+  return cc.retorno(sql);
+   }
+  
+  
+}
