@@ -1,0 +1,120 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package Conexion;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+/**
+ *
+ * @author hp1
+ */
+public class Conectar {
+    
+public static String users="";
+public static String numCuenta="";
+
+Connection conex=null;
+String bd="bd_cajero";
+String usuario="root";
+String servidor="jdbc:mysql://localhost:3306/"+bd;
+Conectar cc;
+String contraseña="";
+Statement st;
+ResultSet rs;
+public Connection abrir(){
+    try{
+        Class.forName("com.mysql.jdbc.Driver");
+         conex=DriverManager.getConnection(servidor, usuario, contraseña);
+         System.out.println("Conexion exitosa");
+     } catch (Exception e) {
+        System.out.println("No se ha logrado conectar con el servidor de base de datos:" +e);     
+     }
+    return conex;
+}
+public ResultSet retorno(String sql){
+ 
+   cc= new Conectar();
+   try {  
+      st=cc.abrir().createStatement();
+      rs=st.executeQuery(sql);     
+    } catch (SQLException e) {
+    System.out.print("Error "+ e);
+    }
+    return rs;
+   }
+
+public int sinRetorno(String sql){
+  cc= new Conectar();
+  int r=0;
+    try {
+    st=cc.abrir().createStatement();
+    r=st.executeUpdate(sql);
+   st.close();
+    } catch (Exception ex) {
+        System.out.println("Error......... "+ex);   
+    }
+    return r;
+}
+public int verificar(String sql){
+cc= new Conectar();
+int r=0;
+    try {
+   st=cc.abrir().createStatement();
+      rs=st.executeQuery(sql);
+        if (rs.next()) 
+            r=1;
+        st.close();
+        rs.close();
+    } catch (Exception e) {
+    }
+return r;
+}
+
+
+
+public int accederCajero(String sql){
+cc= new Conectar();
+
+int r=0;
+    try {
+   st=cc.abrir().createStatement();
+      rs=st.executeQuery(sql);
+        if (rs.next()){ 
+users=rs.getString("Usu.nombre")+" "+rs.getString("Usu.apellido");
+numCuenta=rs.getString("Cu.numCuenta");
+            r=1;
+        st.close();
+        rs.close();
+        }
+    } catch (Exception e) {
+    }
+return r;
+}
+
+
+
+
+public int codMax(String sql){
+    cc= new Conectar();
+int r=0;
+    try {
+   st=cc.abrir().createStatement();
+      rs=st.executeQuery(sql);
+        if (rs.next()) {
+            r=rs.getInt("maximo");
+        }
+        st.close();
+        rs.close();
+    } catch (Exception e) {
+    }
+return r;
+}
+
+}
