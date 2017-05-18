@@ -1,0 +1,81 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package Modelo;
+
+import Conexion.Conectar;
+import static Modelo.Cuenta.saldo;
+import static Modelo.Cuenta.tipoCuenta;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**
+ *
+ */
+public class Transaccion {
+  
+     Conectar cc= new Conectar();
+    ResultSet rsul;
+   int tipTra;
+   String fecha;
+   String hora;
+   double saldoAnterior;
+   double valorRetiro;
+   double saldoActual;
+   String descripcion;
+ Statement st;
+    public Transaccion (int tipTra, String fecha, String hora, double saldoAnterior, double valorRetiro, double saldoActual, String descripcion) {
+   
+        this.tipTra = tipTra;
+        this.fecha = fecha;
+        this.hora = hora;
+        this.saldoAnterior = saldoAnterior;
+        this.valorRetiro = valorRetiro;
+        this.saldoActual = saldoActual;
+        this.descripcion = descripcion;
+    }
+    public  Transaccion(){
+    
+    }
+    public int insertarTransaccion(){
+        int idCu=0;
+         String sql="Select cuenta.id as idCuenta from cuenta where numCuenta='"+Conectar.numCuenta+"'";
+               try {
+           st=cc.abrir().createStatement();
+  
+           rsul=st.executeQuery(sql);
+         if(rsul.next())
+         {
+         idCu=rsul.getInt("idCuenta");
+         
+         }
+               } catch (SQLException ex) {
+           Logger.getLogger(Cuenta.class.getName()).log(Level.SEVERE, null, ex);
+       }
+        
+    
+    String sql2="insert into transaccion values(null,'"+idCu+"','"+tipTra+"','"+fecha+"','"+hora+"',"+saldoAnterior+","+valorRetiro+","+saldoActual+",'"+descripcion+"')";
+        return cc.sinRetorno(sql2);
+    }
+    
+    
+    
+    public int maxTransaccion(){
+     String sql="SELECT max(id) as maximo from transaccion";
+        return cc.codMax(sql);    
+    }
+    
+    
+    public ResultSet consultarTransaccion( int idTran){
+    String sql="Select Usu.*, Cu.*, Tr.*, TC.* from usuario  Usu inner join  cuenta Cu on Usu.id=Cu.idUsu inner join tipo_cuenta TC on TC.id=Cu.idTipCue inner join transaccion Tr on Cu.id=Tr.idCue where Tr.id="+idTran+"";
+    return cc.retorno(sql);
+    }
+        
+    
+    
+}
